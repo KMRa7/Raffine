@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ご新規様向け予約フォーム</title>
+  <style>
+    /* ===== Calm & Elegant Theme ===== */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    :root{
+      --bg:#f6f6f6;--panel:#fff;--ink-900:#111827;--ink-700:#374151;--ink-500:#6b7280;--line:#e5e7eb;
+      --accent-50:#fffbfc;--accent-100:#ffefef;--accent-200:#ffdddd;--accent-300:#f6c8c8;--accent-500:#df9b9b;--accent-600:#c57f7f;
+      --shadow:0 2px 10px rgba(17,24,39,.06);--shadow-lg:0 8px 28px rgba(17,24,39,.08);
+      --r-md:12px;--r-lg:16px;--ease:cubic-bezier(.2,.7,.2,1)
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,"Hiragino Kaku Gothic ProN","Noto Sans JP",Meiryo,sans-serif;
+      color:var(--ink-900);background:linear-gradient(180deg,var(--bg) 0%,#fff 100%);line-height:1.7;
+      -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:32px 16px;display:grid;place-items:start center
+    }
+    .container{
+      width:min(720px,100%);background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow-lg);
+      border-radius:var(--r-lg);padding:clamp(20px,3vw,32px);position:relative
+    }
+    .container::before{
+      content:"";position:absolute;inset:0 0 auto 0;height:6px;background:linear-gradient(90deg,var(--accent-200),var(--accent-300));
+      border-radius:var(--r-lg) var(--r-lg) 0 0
+    }
+    h1{margin:8px 0 20px;font-size:clamp(22px,3.2vw,28px);font-weight:700;letter-spacing:.01em;color:var(--ink-700)}
+    .section-header{
+      display:block;margin:28px 0 12px;padding:12px 16px;font-weight:600;font-size:15px;color:var(--ink-700);
+      background:linear-gradient(180deg,var(--accent-100),#fff);border:1px solid var(--accent-200);border-radius:var(--r-md)
+    }
+    .chip{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--ink-700);background:#fff;margin-right:8px}
+    .chip.required{border-color:#ef4444;color:#ef4444;background:#fff5f5}
+    .chip.optional{color:var(--ink-500)}
+    .info-text{margin:8px 0 16px;padding:12px 14px;background:var(--accent-50);border:1px dashed var(--accent-200);border-radius:var(--r-md);color:var(--ink-700);font-size:14px}
+    label.label{display:block;margin:18px 0 8px;font-weight:600;color:var(--ink-700);font-size:14px}
+    input[type="text"],input[type="tel"],input[type="number"],textarea{
+      width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:var(--r-md);font-size:16px;background:#fff;color:var(--ink-900);
+      transition:border-color .2s var(--ease),box-shadow .2s var(--ease)
+    }
+    input:focus,textarea:focus{outline:none;border-color:var(--accent-500);box-shadow:0 0 0 4px rgba(223,155,155,.18)}
+    .grid-buttons{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin:10px 0 14px}
+    .btn-option{
+      appearance:none;cursor:pointer;padding:12px 14px;min-height:44px;background:#fff;border:1px solid var(--line);border-radius:var(--r-md);
+      font-size:14px;font-weight:600;color:var(--ink-700);display:inline-flex;align-items:center;justify-content:center;text-align:center;
+      transition:transform .05s var(--ease),border-color .2s var(--ease),background .2s var(--ease),box-shadow .2s var(--ease)
+    }
+    .btn-option:hover{border-color:var(--accent-300);background:var(--accent-50)}
+    .btn-option:active{transform:translateY(1px)}
+    .btn-option.active{border-color:var(--accent-500);background:var(--accent-100);box-shadow:inset 0 0 0 1px var(--accent-500)}
+    .btn-accent{
+      appearance:none;cursor:pointer;padding:12px 16px;min-height:44px;width:100%;border:1px solid var(--accent-500);
+      background:linear-gradient(180deg,var(--accent-500),var(--accent-600));color:#fff;font-weight:700;font-size:16px;border-radius:var(--r-lg);
+      box-shadow:var(--shadow);transition:transform .06s var(--ease),filter .2s var(--ease)
+    }
+    .btn-accent:hover{filter:brightness(1.02)}
+    .btn-accent:active{transform:translateY(1px)}
+    .btn-accent:disabled{opacity:.55;cursor:not-allowed}
+    .side-nav{position:fixed;right:12px;top:50%;transform:translateY(-50%);background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px;box-shadow:var(--shadow)}
+    .side-nav a{display:grid;place-items:center;width:44px;height:44px;text-decoration:none;color:var(--ink-700);border-radius:10px;font-size:18px}
+    .side-nav a:hover{background:var(--accent-100)}
+    .error-message{color:#b91c1c;font-size:13px;margin-top:6px}
+    .hidden{display:none !important}
+    @media (prefers-reduced-motion: reduce){*{transition:none !important}}
+    @media (max-width:768px){body{padding:20px 12px}.container{padding:20px}.side-nav{right:8px}.side-nav a{width:40px;height:40px}}
+    @media (max-width:640px){
+      html,body{font-size:16px}
+      body{padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) calc(84px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
+      .container{border-radius:14px;padding:16px}.grid-buttons{grid-template-columns:1fr}.side-nav{display:none}
+    }
+    .footer-cta{
+      position:fixed;left:0;right:0;bottom:0;padding:10px max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));
+      background:rgba(255,255,255,.85);backdrop-filter:saturate(140%) blur(10px);border-top:1px solid var(--line);box-shadow:0 -6px 24px rgba(17,24,39,.06);z-index:50
+    }
+    .footer-cta .btn-accent{width:100%}
+    *{-webkit-tap-highlight-color:transparent}
+    .btn-option,.btn-subtle,.btn-accent{touch-action:manipulation}
+    .container::after{content:"";display:block;height:140px}
+  </style>
+</head>
+<body>
+  <!-- 右側の追従ナビ（スマホはCSSで非表示） -->
+  <nav class="side-nav" aria-label="ページ内ナビゲーション">
+    <a href="#submit" title="送信へ移動"><span aria-hidden>⇩</span></a>
+  </nav>
+
+  <main class="container" role="main">
+    <h1>ご新規様向け予約フォーム</h1>
+
+    <!-- 初めてのご来店ですか？ -->
+    <div class="section-header"><span class="chip required">必須</span>初めてのご来店ですか？</div>
+    <div class="grid-buttons" role="group" aria-label="初回フラグ">
+      <button type="button" class="btn-option q-first" aria-pressed="false" onclick="selectFirstVisit(this,true)">はい</button>
+      <button type="button" class="btn-option q-first" aria-pressed="false" onclick="selectFirstVisit(this,false)">いいえ</button>
+    </div>
+
+    <!-- お名前 -->
+    <div class="section-header"><span class="chip required">必須</span>お名前（フルネーム）</div>
+    <p class="info-text">次回以降は自動入力されます。</p>
+    <label class="label" for="fullName">お名前</label>
+    <input type="text" id="fullName" placeholder="例）山田 太郎" autocomplete="name"/>
+
+    <!-- 電話番号 -->
+    <div class="section-header"><span class="chip required">必須</span>電話番号</div>
+    <label class="label" for="phone">電話番号（ハイフンなし）</label>
+    <input type="tel" id="phone" inputmode="tel" placeholder="09012345678" />
+
+    <!-- 年齢 -->
+    <div class="section-header"><span class="chip required">必須</span>年齢</div>
+    <label class="label" for="age">年齢</label>
+    <input type="number" id="age" min="1" max="120" step="1" inputmode="numeric" placeholder="例）30"/>
+
+    <!-- ご希望コース -->
+    <div class="section-header"><span class="chip required">必須</span>ご希望のコースをお選びください</div>
+    <div class="grid-buttons" role="group" aria-label="コース選択">
+      <button type="button" class="btn-option course" onclick="selectCourse(this)" aria-pressed="false">カウンセリングのみ希望</button>
+      <button type="button" class="btn-option course" onclick="selectCourse(this)" aria-pressed="false">相談してから決めたい</button>
+      <button type="button" class="btn-option course" onclick="selectCourse(this)" aria-pressed="false">セルマンフェイシャルトリートメント</button>
+      <button type="button" class="btn-option course" onclick="selectCourse(this)" aria-pressed="false">美zen筋骨小顔フェイシャルトリートメント</button>
+    </div>
+
+    <div style="margin-top:20px"></div>
+  </main>
+
+  <!-- 画面下部：送信 -->
+  <div class="footer-cta">
+    <button class="btn-accent" id="submit" onclick="submitForm()" disabled>送信</button>
+  </div>
+
+  <!-- LIFF SDK -->
+  <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+  <script>
+    // ====== 状態 ======
+    let isFirstVisit = null;       // true / false
+    let selectedCourse = '';       // string
+
+    const STORAGE_KEY = 'reservation:firstVisitForm';
+
+    // ====== UI選択 ======
+    function selectFirstVisit(el, val){
+      document.querySelectorAll('.q-first').forEach(b=>{ b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
+      el.classList.add('active'); el.setAttribute('aria-pressed','true');
+      isFirstVisit = !!val;
+      saveToStorage();
+    }
+    function selectCourse(el){
+      document.querySelectorAll('.course').forEach(b=>{ b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
+      el.classList.add('active'); el.setAttribute('aria-pressed','true');
+      selectedCourse = el.innerText.trim();
+      saveToStorage();
+    }
+
+    // ====== 保存／読込 ======
+    function saveToStorage(){
+      try{
+        const data = {
+          isFirstVisit,
+          fullName: (document.getElementById('fullName').value||'').trim(),
+          phone: (document.getElementById('phone').value||'').trim(),
+          age: (document.getElementById('age').value||'').trim(),
+          selectedCourse,
+          savedAt: Date.now()
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      }catch(e){ console.warn('保存失敗', e); }
+    }
+    function loadFromStorage(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return;
+        const d = JSON.parse(raw);
+
+        if(typeof d.isFirstVisit === 'boolean'){
+          const target = document.querySelectorAll('.q-first')[ d.isFirstVisit ? 0 : 1 ];
+          if(target){ target.click(); } // クリックで状態再現
+        }
+        if(d.fullName) document.getElementById('fullName').value = d.fullName;
+        if(d.phone) document.getElementById('phone').value = d.phone;
+        if(d.age) document.getElementById('age').value = d.age;
+        if(d.selectedCourse){
+          const btn = Array.from(document.querySelectorAll('.course')).find(b=>b.innerText.trim()===d.selectedCourse);
+          if(btn){ btn.click(); }
+        }
+      }catch(e){ console.warn('読込失敗', e); }
+    }
+
+    // 入力イベントで自動保存
+    ['fullName','phone','age'].forEach(id=>{
+      document.addEventListener('input', (ev)=>{
+        if(ev.target && ev.target.id===id){ saveToStorage(); }
+      });
+    });
+
+    // ====== LIFF ======
+    window.__liffReady = false;
+    async function initLiff(){
+      try{
+        await liff.init({ liffId: '2008128531-zDxw9aJP' });
+        if(!liff.isLoggedIn()){ liff.login(); return; }
+        window.__liffReady = true;
+      }catch(e){
+        console.error('LIFF初期化失敗', e);
+      }finally{
+        const btn = document.getElementById('submit');
+        if(btn) btn.disabled = false; // 失敗でも操作は可能に
+      }
+    }
+    function canSendViaChat(){
+      try{
+        if(typeof liff === 'undefined' || !liff.isInClient()) return false;
+        const ctx = liff.getContext && liff.getContext();
+        return ctx && ctx.type && ctx.type !== 'none';
+      }catch(_){ return false; }
+    }
+
+    // ====== 送信 ======
+    async function submitForm(){
+      saveToStorage();
+
+      const fullName = (document.getElementById('fullName').value || '').trim();
+      const phone = (document.getElementById('phone').value || '').trim().replace(/[^\d]/g,'');
+      const age = (document.getElementById('age').value || '').trim();
+
+      // バリデーション
+      if(isFirstVisit === null){ alert('「初めてのご来店ですか？」を選択してください。'); return; }
+      if(!fullName){ alert('お名前（フルネーム）を入力してください。'); return; }
+      if(!phone){ alert('電話番号を入力してください。'); return; }
+      if(!/^\d{10,11}$/.test(phone)){ alert('電話番号は10〜11桁の数字で入力してください。'); return; }
+      const ageNum = Number(age);
+      if(!age || !Number.isFinite(ageNum) || ageNum < 1 || ageNum > 120){ alert('年齢を正しく入力してください（1〜120）。'); return; }
+      if(!selectedCourse){ alert('ご希望のコースを選択してください。'); return; }
+
+      const messageText =
+        '≪ご新規様向け予約≫\n' +
+        '【初来店】\n' + (isFirstVisit ? 'はい' : 'いいえ') + '\n\n' +
+        '【お名前】\n' + fullName + '\n\n' +
+        '【電話番号】\n' + phone + '\n\n' +
+        '【年齢】\n' + ageNum + ' 歳\n\n' +
+        '【ご希望コース】\n' + selectedCourse;
+
+      try{
+        if(canSendViaChat()){
+          await liff.sendMessages([{ type:'text', text: messageText }]);
+          alert('送信ありがとうございます。内容を確認次第ご連絡いたします。');
+          liff.closeWindow();
+          return;
+        }
+        if(typeof liff !== 'undefined' && liff.isApiAvailable && liff.isApiAvailable('shareTargetPicker')){
+          await liff.shareTargetPicker([{ type:'text', text: messageText }]);
+          alert('内容をLINEで共有しました。店舗側でも確認します。');
+          return;
+        }
+        await navigator.clipboard.writeText(messageText);
+        alert('この画面はトーク外で開いています。コピーした内容をトークに貼り付けて送信してください。');
+      }catch(e){
+        console.error('送信失敗', e);
+        alert('送信に失敗しました。LINEアプリ内のトークから開き直すか、再度お試しください。');
+      }
+    }
+
+    // ====== 初期化 ======
+    document.addEventListener('DOMContentLoaded', ()=>{
+      initLiff();
+      loadFromStorage();
+
+      // 3秒後のフォールバック（念のため）
+      setTimeout(()=>{
+        const btn = document.getElementById('submit');
+        if(btn && btn.disabled){ btn.disabled = false; }
+      },3000);
+    });
+  </script>
+</body>
+</html>
